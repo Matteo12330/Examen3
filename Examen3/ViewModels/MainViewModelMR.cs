@@ -25,6 +25,7 @@ namespace ExamenProgra.ViewModels
             var joke = await _apiService.GetJokeAsync();
             var jokeMR = new JokeMR { Joke = joke };
             await _databaseService.SaveJokeAsync(jokeMR);
+
             Jokes.Add(jokeMR);
         }
         public async Task LoadJokesAsync()
