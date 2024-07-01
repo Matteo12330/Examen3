@@ -1,15 +1,11 @@
-﻿using System;
-using Examen3.Data;
-using Examen3.Models;
-
-namespace Examen3
+﻿using Microsoft.Maui.Controls;
+namespace ExamenProgra
 {
-    public partial class App : Application
+    public partial class AppShell : Shell
     {
-        public App()
+        public AppShell()
         {
             InitializeComponent();
-            MainPage = new MainPage();
         }
     }
 }

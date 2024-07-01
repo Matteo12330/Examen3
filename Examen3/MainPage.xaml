@@ -1,17 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Examen3.MainPage">
-
-    <StackLayout>
-        <ListView ItemsSource="{Binding Dogs}">
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="ExamenProgra.MainPage"
+            xmlns:vm="clr-namespace:ExamenProgra.ViewModels">
+    <ContentPage.BindingContext>
+        <vm:MainViewModelMR />
+    </ContentPage.BindingContext>
+    <StackLayout Padding="10">
+        <Label Text="Lista de Chistes MR" FontSize="Large" HorizontalOptions="Center" />
+        <Button Text="Obtener Chiste" Command="{Binding FetchJokeCommand}" />
+        <ListView ItemsSource="{Binding Jokes}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Name}" Detail="{Binding Breed}" />
+                    <TextCell Text="{Binding Joke}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Text="Add Dog" Clicked="OnAddDogButtonClicked" />
     </StackLayout>
-
 </ContentPage>

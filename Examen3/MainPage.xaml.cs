@@ -1,31 +1,20 @@
-﻿using Examen3.ViewModels;
-using Examen3.Data;
-using Examen3.Models;
-
-namespace Examen3
+﻿using Microsoft.Maui.Controls;
+using ExamenProgra.ViewModels;
+using ExamenProgra.Services;
+using System.IO;
+namespace ExamenProgra
 {
     public partial class MainPage : ContentPage
     {
-        private MainViewModelMR _viewModel;
-
         public MainPage()
         {
             InitializeComponent();
-            var dogServiceMR = new DatabaseServiceMR();
-            _viewModel = new MainViewModelMR(dogServiceMR);
-            BindingContext = _viewModel;
-        }
-
-        private void OnAddDogButtonClicked(object sender, EventArgs e)
-        {
-            var newDog = new Dog
-            {
-                Id = 1,
-                Name = "Fido",
-                Breed = "Labrador"
-            };
-            _viewModel.AddDog(newDog);
+            var apiService = new ApiServiceMR();
+            var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "jokesMR.db3");
+            var databaseService = new DatabaseServiceMR(dbPath);
+            var viewModel = new MainViewModelMR(apiService, databaseService);
+            BindingContext = viewModel;
+            viewModel.LoadJokesAsync();
         }
     }
 }
-

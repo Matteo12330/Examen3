@@ -1,22 +1,28 @@
-﻿using System;
+﻿using SQLite;
+using ExamenProgra.Models;
 using System.Collections.Generic;
-using Examen3.Models;
-
-namespace Examen3.Data
+using System.Threading.Tasks;
+namespace ExamenProgra.Data
 {
     public class DatabaseServiceMR
     {
-        // Simulación de una base de datos en memoria
-        private List<Dog> _dogs = new List<Dog>();
-
-        public void AddDog(Dog dog)
+        private readonly SQLiteAsyncConnection _database;
+        public DatabaseServiceMR(string dbPath)
         {
-            _dogs.Add(dog);
+            _database = new SQLiteAsyncConnection(dbPath);
+            _database.CreateTableAsync<JokeMR>().Wait();
         }
-
-        public List<Dog> GetDogs()
+        public Task<List<JokeMR>> GetJokesAsync()
         {
-            return _dogs;
+            return _database.Table<JokeMR>().ToListAsync();
+        }
+        public Task<int> SaveJokeAsync(JokeMR joke)
+        {
+            return _database.InsertAsync(joke);
+        }
+        public Task<int> DeleteJokeAsync(JokeMR joke)
+        {
+            return _database.DeleteAsync(joke);
         }
     }
 }

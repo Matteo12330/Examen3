@@ -1,25 +1,39 @@
 ﻿using System.Collections.ObjectModel;
-using Examen3.Data;
-using Examen3.Models;
-
-namespace Examen3.ViewModels
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Microsoft.Maui.Controls;
+using ExamenProgra.Models;
+using ExamenProgra.Services;
+using ExamenProgra.Data;
+namespace ExamenProgra.ViewModels
 {
-    public class MainViewModelMR
+    public class MainViewModelMR : BindableObject
     {
-        private readonly DatabaseServiceMR _dogServiceMR;
-
-        public ObservableCollection<Dog> Dogs { get; set; }
-
-        public MainViewModelMR(DatabaseServiceMR dogServiceMR)
+        private readonly ApiServiceMR _apiService;
+        private readonly DatabaseServiceMR _databaseService;
+        public ObservableCollection<JokeMR> Jokes { get; }
+        public ICommand FetchJokeCommand { get; }
+        public MainViewModelMR(ApiServiceMR apiService, DatabaseServiceMR databaseService)
         {
-            _dogServiceMR = dogServiceMR;
-            Dogs = new ObservableCollection<Dog>(_dogServiceMR.GetDogs());
+            _apiService = apiService;
+            _databaseService = databaseService;
+            Jokes = new ObservableCollection<JokeMR>();
+            FetchJokeCommand = new Command(async () => await FetchJokeAsync());
         }
-
-        public void AddDog(Dog dog)
+        private async Task FetchJokeAsync()
         {
-            _dogServiceMR.AddDog(dog);
-            Dogs.Add(dog);
+            var joke = await _apiService.GetJokeAsync();
+            var jokeMR = new JokeMR { Joke = joke };
+            await _databaseService.SaveJokeAsync(jokeMR);
+            Jokes.Add(jokeMR);
+        }
+        public async Task LoadJokesAsync()
+        {
+            var jokes = await _databaseService.GetJokesAsync();
+            foreach (var joke in jokes)
+            {
+                Jokes.Add(joke);
+            }
         }
     }
 }
